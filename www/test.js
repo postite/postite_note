@@ -531,7 +531,6 @@ haxe_CallStack.callStack = function() {
 		throw new Error();
 	} catch( e ) {
 		haxe_CallStack.lastException = e;
-		((e) instanceof js__$Boot_HaxeError);
 		var a = haxe_CallStack.getStack(e);
 		a.shift();
 		return a;
@@ -1077,7 +1076,6 @@ postite_CssHack.prototype = {
 			postite_CssHack.sheet.insertRule(rule);
 		} catch( error ) {
 			haxe_CallStack.lastException = error;
-			((error) instanceof js__$Boot_HaxeError);
 			throw new Error("Malformated CSS: \"" + rule + "\"");
 		}
 	}
@@ -1086,8 +1084,9 @@ postite_CssHack.prototype = {
 	}
 	,__class__: postite_CssHack
 };
-var postite_NoteType = $hxEnums["postite.NoteType"] = { __ename__ : "postite.NoteType", __constructs__ : ["Simple"]
+var postite_NoteType = $hxEnums["postite.NoteType"] = { __ename__ : "postite.NoteType", __constructs__ : ["Simple","Stay"]
 	,Simple: {_hx_index:0,__enum__:"postite.NoteType",toString:$estr}
+	,Stay: {_hx_index:1,__enum__:"postite.NoteType",toString:$estr}
 };
 var postite_Note = function() {
 };
@@ -1098,7 +1097,16 @@ postite_Note.prototype = {
 		if(type == null) {
 			type = postite_NoteType.Simple;
 		}
-		this.noteBox = new postite_NoteBox().avecTitre("ého").avecTexte(msg).appendTo(window.document.body).disapear(1000);
+		var tmp;
+		switch(type._hx_index) {
+		case 0:
+			tmp = new postite_NoteBox().avecTitre("ého").avecTexte(msg).appendTo(window.document.body).disapear(1000);
+			break;
+		case 1:
+			tmp = new postite_NoteBox().avecTitre("ého").avecTexte(msg).appendTo(window.document.body);
+			break;
+		}
+		this.noteBox = tmp;
 		return this;
 	}
 	,kill: function() {
@@ -1167,7 +1175,7 @@ postite_NoteBox.prototype = {
 		box.appendChild(this.content);
 		var css = new postite_CssHack();
 		css.insertRule("h4{\n            color:pink;\n            }\n            ");
-		css.insertRules(".postite_note{\n                background-color:gray;\n                position:fixed;\n                right:10px;\n                width:100px;\n                padding:10px;\n                font-family:Sans-serif;\n\n            }\n            .postite_note h4{\n                margin:0;\n                background-color:black;\n                color:white;\n                font-size:3em;\n            }\n            .postite_note p{\n                color:blue;\n            }");
+		css.insertRules(".postite_note{\n                z-index=999;\n                background-color:gray;\n                position:fixed;\n                right:10px;\n                width:100px;\n                padding:10px;\n                font-family:Sans-serif;\n\n            }\n            .postite_note h4{\n                margin:0;\n                background-color:black;\n                color:white;\n                font-size:3em;\n            }\n            .postite_note p{\n                color:white;\n            }");
 		return box;
 	}
 	,__class__: postite_NoteBox
@@ -1226,11 +1234,10 @@ utest_Assert.notNull = function(value,msg,pos) {
 	}
 };
 utest_Assert.is = function(value,type,msg,pos) {
-	var cond = js_Boot.__instanceof(value,type);
 	if(utest_Assert.results == null) {
 		throw new js__$Boot_HaxeError("Assert at " + pos.fileName + ":" + pos.lineNumber + " out of context. Most likely you are trying to assert after a test timeout.");
 	}
-	if(cond) {
+	if(js_Boot.__instanceof(value,type)) {
 		utest_Assert.results.add(utest_Assertation.Success(pos));
 	} else {
 		utest_Assert.results.add(utest_Assertation.Failure(msg != null ? msg : "expected type " + utest_Assert.typeToString(type) + " but it is " + utest_Assert.typeToString(value),pos));
@@ -1268,11 +1275,10 @@ utest_Assert.match = function(pattern,value,msg,pos) {
 	}
 };
 utest_Assert.floatEquals = function(expected,value,approx,msg,pos) {
-	var cond = utest_Assert._floatEquals(expected,value,approx);
 	if(utest_Assert.results == null) {
 		throw new js__$Boot_HaxeError("Assert at " + pos.fileName + ":" + pos.lineNumber + " out of context. Most likely you are trying to assert after a test timeout.");
 	}
-	if(cond) {
+	if(utest_Assert._floatEquals(expected,value,approx)) {
 		utest_Assert.results.add(utest_Assertation.Success(pos));
 	} else {
 		utest_Assert.results.add(utest_Assertation.Failure(msg != null ? msg : "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value),pos));
@@ -1772,13 +1778,11 @@ utest_Assert.typeToString = function(t) {
 		}
 	} catch( e ) {
 		haxe_CallStack.lastException = e;
-		((e) instanceof js__$Boot_HaxeError);
 	}
 	try {
 		return t.__name__;
 	} catch( e1 ) {
 		haxe_CallStack.lastException = e1;
-		((e1) instanceof js__$Boot_HaxeError);
 	}
 	try {
 		var _t1 = Type.getEnum(t);
@@ -1787,25 +1791,21 @@ utest_Assert.typeToString = function(t) {
 		}
 	} catch( e2 ) {
 		haxe_CallStack.lastException = e2;
-		((e2) instanceof js__$Boot_HaxeError);
 	}
 	try {
 		return t.__ename__;
 	} catch( e3 ) {
 		haxe_CallStack.lastException = e3;
-		((e3) instanceof js__$Boot_HaxeError);
 	}
 	try {
 		return Std.string(Type.typeof(t));
 	} catch( e4 ) {
 		haxe_CallStack.lastException = e4;
-		((e4) instanceof js__$Boot_HaxeError);
 	}
 	try {
 		return Std.string(t);
 	} catch( e5 ) {
 		haxe_CallStack.lastException = e5;
-		((e5) instanceof js__$Boot_HaxeError);
 	}
 	return "<unable to retrieve type name>";
 };
@@ -2041,8 +2041,7 @@ utest_TestHandler.prototype = {
 			}
 		} catch( e ) {
 			haxe_CallStack.lastException = e;
-			var e1 = ((e) instanceof js__$Boot_HaxeError) ? e.val : e;
-			this.results.add(utest_Assertation.SetupError(e1,utest_TestHandler.exceptionStack()));
+			this.results.add(utest_Assertation.SetupError(((e) instanceof js__$Boot_HaxeError) ? e.val : e,utest_TestHandler.exceptionStack()));
 		}
 		isSync = false;
 		if(!expectingAsync) {
@@ -2054,8 +2053,7 @@ utest_TestHandler.prototype = {
 			this.executeMethod(this.fixture.method);
 		} catch( e ) {
 			haxe_CallStack.lastException = e;
-			var e1 = ((e) instanceof js__$Boot_HaxeError) ? e.val : e;
-			this.results.add(utest_Assertation.Error(e1,utest_TestHandler.exceptionStack()));
+			this.results.add(utest_Assertation.Error(((e) instanceof js__$Boot_HaxeError) ? e.val : e,utest_TestHandler.exceptionStack()));
 		}
 	}
 	,executeFinally: function() {
@@ -2121,8 +2119,7 @@ utest_TestHandler.prototype = {
 				f();
 			} catch( e ) {
 				haxe_CallStack.lastException = e;
-				var e1 = ((e) instanceof js__$Boot_HaxeError) ? e.val : e;
-				handler.results.add(utest_Assertation.AsyncError(e1,utest_TestHandler.exceptionStack(0)));
+				handler.results.add(utest_Assertation.AsyncError(((e) instanceof js__$Boot_HaxeError) ? e.val : e,utest_TestHandler.exceptionStack(0)));
 			}
 		};
 	}
@@ -2143,8 +2140,7 @@ utest_TestHandler.prototype = {
 				f(e);
 			} catch( e1 ) {
 				haxe_CallStack.lastException = e1;
-				var e2 = ((e1) instanceof js__$Boot_HaxeError) ? e1.val : e1;
-				handler.results.add(utest_Assertation.AsyncError(e2,utest_TestHandler.exceptionStack(0)));
+				handler.results.add(utest_Assertation.AsyncError(((e1) instanceof js__$Boot_HaxeError) ? e1.val : e1,utest_TestHandler.exceptionStack(0)));
 			}
 		};
 	}
@@ -2195,8 +2191,7 @@ utest_TestHandler.prototype = {
 			this.executeAsyncMethod(this.fixture.teardownAsync,complete);
 		} catch( e ) {
 			haxe_CallStack.lastException = e;
-			var e1 = ((e) instanceof js__$Boot_HaxeError) ? e.val : e;
-			this.results.add(utest_Assertation.TeardownError(e1,utest_TestHandler.exceptionStack(2)));
+			this.results.add(utest_Assertation.TeardownError(((e) instanceof js__$Boot_HaxeError) ? e.val : e,utest_TestHandler.exceptionStack(2)));
 		}
 		isSync = false;
 		if(!expectingAsync) {
@@ -2242,8 +2237,7 @@ utest_ITestHandler.prototype = $extend(utest_TestHandler.prototype,{
 			this.setupAsync = this.fixture.setupMethod();
 		} catch( e ) {
 			haxe_CallStack.lastException = e;
-			var e1 = ((e) instanceof js__$Boot_HaxeError) ? e.val : e;
-			this.results.add(utest_Assertation.SetupError(e1,haxe_CallStack.exceptionStack()));
+			this.results.add(utest_Assertation.SetupError(((e) instanceof js__$Boot_HaxeError) ? e.val : e,haxe_CallStack.exceptionStack()));
 			this.completedFinally();
 			return;
 		}
@@ -2262,8 +2256,7 @@ utest_ITestHandler.prototype = $extend(utest_TestHandler.prototype,{
 			this.testAsync = this.test.execute();
 		} catch( e ) {
 			haxe_CallStack.lastException = e;
-			var e1 = ((e) instanceof js__$Boot_HaxeError) ? e.val : e;
-			this.results.add(utest_Assertation.Error(e1,haxe_CallStack.exceptionStack()));
+			this.results.add(utest_Assertation.Error(((e) instanceof js__$Boot_HaxeError) ? e.val : e,haxe_CallStack.exceptionStack()));
 			this.runTeardown();
 			return;
 		}
@@ -2289,8 +2282,7 @@ utest_ITestHandler.prototype = $extend(utest_TestHandler.prototype,{
 			this.teardownAsync = this.fixture.teardownMethod();
 		} catch( e ) {
 			haxe_CallStack.lastException = e;
-			var e1 = ((e) instanceof js__$Boot_HaxeError) ? e.val : e;
-			this.results.add(utest_Assertation.TeardownError(e1,haxe_CallStack.exceptionStack()));
+			this.results.add(utest_Assertation.TeardownError(((e) instanceof js__$Boot_HaxeError) ? e.val : e,haxe_CallStack.exceptionStack()));
 			this.completedFinally();
 			return;
 		}
@@ -2476,7 +2468,6 @@ utest_Runner.prototype = {
 			return Reflect.isFunction(Reflect.field(test,name));
 		} catch( e ) {
 			haxe_CallStack.lastException = e;
-			((e) instanceof js__$Boot_HaxeError);
 			return false;
 		}
 	}
@@ -3574,8 +3565,7 @@ utest_ui_text_HtmlReport.prototype = {
 			buf.b += "WARNING ";
 		}
 		buf.b = (buf.b += "</span>") + "<div class=\"fixturedetails\">";
-		buf.b += Std.string("<strong>" + name + "</strong>");
-		buf.b += ": ";
+		buf.b = (buf.b += Std.string("<strong>" + name + "</strong>")) + ": ";
 		this.resultNumbers(buf,result.stats);
 		var messages = [];
 		var _g = result.iterator();

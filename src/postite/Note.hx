@@ -9,7 +9,11 @@ import js.Browser.document as doc;
 
 enum NoteType{
     Simple;
+    Stay;
 
+}
+typedef NoteOpts={
+    duration:Int,
 }
 @:access(postite.NoteBox)
 class Note{
@@ -20,6 +24,7 @@ class Note{
     public function notify(msg:String,type:NoteType=Simple):Note{
         noteBox=switch type{
             case Simple: new NoteBox().avecTitre("ého").avecTexte(msg).appendTo(doc.body).disapear(1000);
+            case Stay: new NoteBox().avecTitre("ého").avecTexte(msg).appendTo(doc.body);
         }
         return this;
     }
@@ -93,6 +98,7 @@ class NoteBox {
             ');
         css.insertRules(
             '.postite_note{
+                z-index=999;
                 background-color:gray;
                 position:fixed;
                 right:10px;
