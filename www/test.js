@@ -286,10 +286,7 @@ var utest_Test = function() {
 utest_Test.__name__ = "utest.Test";
 utest_Test.__interfaces__ = [utest_ITest];
 utest_Test.prototype = {
-	__initializeUtest__: function() {
-		return { tests : [], accessories : { }};
-	}
-	,__class__: utest_Test
+	__class__: utest_Test
 };
 var TestDom = function() {
 	utest_Test.call(this);
@@ -334,27 +331,6 @@ TestDom.prototype = $extend(utest_Test.prototype,{
 		window.document.body.appendChild(box);
 		return box;
 	}
-	,__initializeUtest__: function() {
-		var _gthis = this;
-		var init = utest_Test.prototype.__initializeUtest__.call(this);
-		init.accessories.setup = function() {
-			_gthis.setup();
-			return utest_Async.getResolved();
-		};
-		init.accessories.teardown = function() {
-			_gthis.teardown();
-			return utest_Async.getResolved();
-		};
-		init.tests.push({ name : "testtest", execute : function() {
-			_gthis.testtest();
-			return utest_Async.getResolved();
-		}});
-		init.tests.push({ name : "testDom", execute : function() {
-			_gthis.testDom();
-			return utest_Async.getResolved();
-		}});
-		return init;
-	}
 	,__class__: TestDom
 });
 var TestNote = function() {
@@ -385,28 +361,6 @@ TestNote.prototype = $extend(utest_Test.prototype,{
 			utest_Assert.isNull(window.document.querySelector(".postite_note"),null,{ fileName : "tests/TestNote.hx", lineNumber : 39, className : "TestNote", methodName : "testDisapear"});
 			async.done({ fileName : "tests/TestNote.hx", lineNumber : 40, className : "TestNote", methodName : "testDisapear"});
 		},1000);
-	}
-	,__initializeUtest__: function() {
-		var _gthis = this;
-		var init = utest_Test.prototype.__initializeUtest__.call(this);
-		init.accessories.setup = function() {
-			_gthis.setup();
-			return utest_Async.getResolved();
-		};
-		init.tests.push({ name : "testCreateNote", execute : function() {
-			_gthis.testCreateNote();
-			return utest_Async.getResolved();
-		}});
-		init.tests.push({ name : "testStay", execute : function() {
-			_gthis.testStay();
-			return utest_Async.getResolved();
-		}});
-		init.tests.push({ name : "testDisapear", execute : function() {
-			var async = new utest_Async(1200);
-			_gthis.testDisapear(async);
-			return async;
-		}});
-		return init;
 	}
 	,__class__: TestNote
 });

@@ -10,7 +10,6 @@ import js.Browser.document as doc;
 enum NoteType{
     Simple;
     Stay;
-
 }
 typedef NoteOpts={
     duration:Int,
@@ -100,7 +99,7 @@ class NoteBox {
             '.postite_note{
                 z-index=999;
                 background-color:gray;
-                position:fixed;
+                position:absolute;
                 right:10px;
                 width:100px;
                 padding:10px;
