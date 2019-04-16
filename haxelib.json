@@ -1,0 +1,15 @@
+{
+    "name": "postite_note",
+    "url" : "",
+    "license": "MIT",
+    "tags": ["notification",,"utils"],
+    "description": "",
+    "version": "0.0.1",
+    "classPath": "src/",
+    "releasenote": "init",
+    "contributors": ["postite"],
+    "dependencies": {
+        
+    
+    }
+}

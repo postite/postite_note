@@ -371,6 +371,10 @@ TestNote.prototype = $extend(utest_Test.prototype,{
 		this.createNote("hello");
 		utest_Assert.notNull(window.document.querySelector(".postite_note"),null,{ fileName : "tests/TestNote.hx", lineNumber : 23, className : "TestNote", methodName : "testCreateNote"});
 	}
+	,testStay: function() {
+		new postite_Note().notify("msg",postite_NoteType.Stay);
+		utest_Assert.isTrue(true,null,{ fileName : "tests/TestNote.hx", lineNumber : 28, className : "TestNote", methodName : "testStay"});
+	}
 	,createNote: function(msg) {
 		var note = new postite_Note();
 		note.notify(msg);
@@ -378,8 +382,8 @@ TestNote.prototype = $extend(utest_Test.prototype,{
 	}
 	,testDisapear: function(async) {
 		haxe_Timer.delay(function() {
-			utest_Assert.isNull(window.document.querySelector(".postite_note"),null,{ fileName : "tests/TestNote.hx", lineNumber : 35, className : "TestNote", methodName : "testDisapear"});
-			async.done({ fileName : "tests/TestNote.hx", lineNumber : 36, className : "TestNote", methodName : "testDisapear"});
+			utest_Assert.isNull(window.document.querySelector(".postite_note"),null,{ fileName : "tests/TestNote.hx", lineNumber : 39, className : "TestNote", methodName : "testDisapear"});
+			async.done({ fileName : "tests/TestNote.hx", lineNumber : 40, className : "TestNote", methodName : "testDisapear"});
 		},1000);
 	}
 	,__initializeUtest__: function() {
@@ -391,6 +395,10 @@ TestNote.prototype = $extend(utest_Test.prototype,{
 		};
 		init.tests.push({ name : "testCreateNote", execute : function() {
 			_gthis.testCreateNote();
+			return utest_Async.getResolved();
+		}});
+		init.tests.push({ name : "testStay", execute : function() {
+			_gthis.testStay();
 			return utest_Async.getResolved();
 		}});
 		init.tests.push({ name : "testDisapear", execute : function() {

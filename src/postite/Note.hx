@@ -21,7 +21,7 @@ class Note{
     public function new(){
 
     }
-    public function notify(msg:String,type:NoteType=Simple):Note{
+    public function notify(msg:String,?type:NoteType=Simple):Note{
         noteBox=switch type{
             case Simple: new NoteBox().avecTitre("ého").avecTexte(msg).appendTo(doc.body).disapear(1000);
             case Stay: new NoteBox().avecTitre("ého").avecTexte(msg).appendTo(doc.body);

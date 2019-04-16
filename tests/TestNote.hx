@@ -23,12 +23,16 @@ class TestNote extends Test{
      Assert.notNull(doc.querySelector(".postite_note"));
   }
 
-
+function testStay(){
+    var note=new Note().notify("msg",Stay);
+    Assert.isTrue(1==1);
+}
   function createNote(msg:String){
       var note=new Note();
       note.notify(msg);
       return note;
   }
+  
   @:timeout(1200)
   function testDisapear(async:utest.Async){
       haxe.Timer.delay(function(){
