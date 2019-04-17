@@ -1137,7 +1137,7 @@ postite_NoteBox.prototype = {
 	,content: null
 	,onIt: null
 	,appendTo: function(to) {
-		to.appendChild(this.el);
+		to.insertBefore(to.firstChild,this.el);
 		this.onIt = true;
 		return this;
 	}
@@ -1175,7 +1175,7 @@ postite_NoteBox.prototype = {
 	,createBox: function() {
 		var box = window.document.createElement("div");
 		box.classList.add("postite_note");
-		box.classList.add("zelote");
+		box.classList.add("lupin");
 		this.hed = window.document.createElement("H4");
 		this.hed.innerHTML = this.titre;
 		this.content = window.document.createElement("p");

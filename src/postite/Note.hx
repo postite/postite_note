@@ -47,7 +47,8 @@ class NoteBox {
        el=createBox();
     }
      function appendTo(to:Element):NoteBox{
-        to.appendChild(el);
+       // to.appendChild(el);
+        to.insertBefore(to.firstChild,el);
         onIt=true;
         return this;
     }
@@ -81,7 +82,7 @@ class NoteBox {
      function createBox():DivElement{
         var box=doc.createDivElement();
         box.classList.add('postite_note');
-        box.classList.add('zelote');
+        box.classList.add('lupin');
         hed= doc.createElement("H4");
 
         hed.innerHTML=titre;
