@@ -81,7 +81,7 @@ class NoteBox {
      function createBox():DivElement{
         var box=doc.createDivElement();
         box.classList.add('postite_note');
-        box.classList.add('bababab');
+        box.classList.add('zelote');
         hed= doc.createElement("H4");
 
         hed.innerHTML=titre;
