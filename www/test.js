@@ -1137,7 +1137,11 @@ postite_NoteBox.prototype = {
 	,content: null
 	,onIt: null
 	,appendTo: function(to) {
-		to.insertBefore(to.firstChild,this.el);
+		if(to.firstChild != null) {
+			this.el.insertBefore(this.el,to.firstChild);
+		} else {
+			to.appendChild(this.el);
+		}
 		this.onIt = true;
 		return this;
 	}
@@ -1175,7 +1179,7 @@ postite_NoteBox.prototype = {
 	,createBox: function() {
 		var box = window.document.createElement("div");
 		box.classList.add("postite_note");
-		box.classList.add("lupin");
+		box.classList.add("popli");
 		this.hed = window.document.createElement("H4");
 		this.hed.innerHTML = this.titre;
 		this.content = window.document.createElement("p");
