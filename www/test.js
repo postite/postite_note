@@ -1084,6 +1084,7 @@ postite_CssHack.prototype = {
 			postite_CssHack.sheet.insertRule(rule);
 		} catch( error ) {
 			haxe_CallStack.lastException = error;
+			((error) instanceof js__$Boot_HaxeError);
 			throw new Error("Malformated CSS: \"" + rule + "\"");
 		}
 	}
@@ -1138,7 +1139,7 @@ postite_NoteBox.prototype = {
 	,onIt: null
 	,appendTo: function(to) {
 		if(to.firstChild != null) {
-			this.el.insertBefore(this.el,to.firstChild);
+			to.insertBefore(this.el,to.firstChild);
 		} else {
 			to.appendChild(this.el);
 		}
@@ -1188,7 +1189,7 @@ postite_NoteBox.prototype = {
 		box.appendChild(this.content);
 		var css = new postite_CssHack();
 		css.insertRule("h4{\n            color:pink;\n            }\n            ");
-		css.insertRules(".postite_note{\n                z-index=999;\n                background-color:gray;\n                position:absolute;\n                right:10px;\n                width:100px;\n                padding:10px;\n                font-family:Sans-serif;\n\n            }\n            .postite_note h4{\n                margin:0;\n                background-color:black;\n                color:white;\n                font-size:3em;\n            }\n            .postite_note p{\n                color:white;\n            }");
+		css.insertRules(".postite_note{\n                z-index=999;\n                background-color:gray;\n                position:fixed;\n                right:10px;\n                width:100px;\n                padding:10px;\n                font-family:Sans-serif;\n\n            }\n            .postite_note h4{\n                margin:0;\n                background-color:black;\n                color:white;\n                font-size:3em;\n            }\n            .postite_note p{\n                color:white;\n            }");
 		return box;
 	}
 	,__class__: postite_NoteBox

@@ -104,7 +104,7 @@ class NoteBox {
             '.postite_note{
                 z-index=999;
                 background-color:gray;
-                position:absolute;
+                position:fixed;
                 right:10px;
                 width:100px;
                 padding:10px;
