@@ -364,16 +364,22 @@ TestNote.__name__ = "TestNote";
 TestNote.__super__ = utest_Test;
 TestNote.prototype = $extend(utest_Test.prototype,{
 	note: null
-	,setup: function() {
-		this.note = this.createNote("hello");
+	,testStack: function() {
+		new postite_Note().notify("stack1",postite_NoteType.Stack);
+		new postite_Note().notify(" stack2",postite_NoteType.Stack);
+		utest_Assert.equals(2,postite_Note.noteBoxes.length,null,{ fileName : "tests/TestNote.hx", lineNumber : 23, className : "TestNote", methodName : "testStack"});
+		var _g = 0;
+		var _g1 = postite_Note.noteBoxes;
+		while(_g < _g1.length) haxe_Log.trace(_g1[_g++].type,{ fileName : "tests/TestNote.hx", lineNumber : 25, className : "TestNote", methodName : "testStack"});
 	}
 	,testCreateNote: function() {
-		this.createNote("hello");
-		utest_Assert.notNull(window.document.querySelector(".postite_note"),null,{ fileName : "tests/TestNote.hx", lineNumber : 23, className : "TestNote", methodName : "testCreateNote"});
+		haxe_Log.trace("createNote",{ fileName : "tests/TestNote.hx", lineNumber : 29, className : "TestNote", methodName : "testCreateNote"});
+		this.createNote("hello2");
+		utest_Assert.notNull(window.document.querySelector(".postite_note"),null,{ fileName : "tests/TestNote.hx", lineNumber : 31, className : "TestNote", methodName : "testCreateNote"});
 	}
 	,testStay: function() {
-		new postite_Note().notify("msg",postite_NoteType.Stay);
-		utest_Assert.isTrue(true,null,{ fileName : "tests/TestNote.hx", lineNumber : 28, className : "TestNote", methodName : "testStay"});
+		new postite_Note().notify("stay1",postite_NoteType.Stay);
+		utest_Assert.isTrue(true,null,{ fileName : "tests/TestNote.hx", lineNumber : 36, className : "TestNote", methodName : "testStay"});
 	}
 	,createNote: function(msg) {
 		var note = new postite_Note();
@@ -382,17 +388,17 @@ TestNote.prototype = $extend(utest_Test.prototype,{
 	}
 	,testDisapear: function(async) {
 		haxe_Timer.delay(function() {
-			utest_Assert.isNull(window.document.querySelector(".postite_note"),null,{ fileName : "tests/TestNote.hx", lineNumber : 39, className : "TestNote", methodName : "testDisapear"});
-			async.done({ fileName : "tests/TestNote.hx", lineNumber : 40, className : "TestNote", methodName : "testDisapear"});
+			utest_Assert.isNull(window.document.querySelector(".postite_note"),null,{ fileName : "tests/TestNote.hx", lineNumber : 49, className : "TestNote", methodName : "testDisapear"});
+			async.done({ fileName : "tests/TestNote.hx", lineNumber : 50, className : "TestNote", methodName : "testDisapear"});
 		},1000);
 	}
 	,__initializeUtest__: function() {
 		var _gthis = this;
 		var init = utest_Test.prototype.__initializeUtest__.call(this);
-		init.accessories.setup = function() {
-			_gthis.setup();
+		init.tests.push({ name : "testStack", execute : function() {
+			_gthis.testStack();
 			return utest_Async.getResolved();
-		};
+		}});
 		init.tests.push({ name : "testCreateNote", execute : function() {
 			_gthis.testCreateNote();
 			return utest_Async.getResolved();
@@ -1084,7 +1090,6 @@ postite_CssHack.prototype = {
 			postite_CssHack.sheet.insertRule(rule);
 		} catch( error ) {
 			haxe_CallStack.lastException = error;
-			((error) instanceof js__$Boot_HaxeError);
 			throw new Error("Malformated CSS: \"" + rule + "\"");
 		}
 	}
@@ -1093,40 +1098,98 @@ postite_CssHack.prototype = {
 	}
 	,__class__: postite_CssHack
 };
-var postite_NoteType = $hxEnums["postite.NoteType"] = { __ename__ : "postite.NoteType", __constructs__ : ["Simple","Stay"]
+var postite_NoteType = $hxEnums["postite.NoteType"] = { __ename__ : "postite.NoteType", __constructs__ : ["Simple","Stay","Stack"]
 	,Simple: {_hx_index:0,__enum__:"postite.NoteType",toString:$estr}
 	,Stay: {_hx_index:1,__enum__:"postite.NoteType",toString:$estr}
+	,Stack: {_hx_index:2,__enum__:"postite.NoteType",toString:$estr}
 };
 var postite_Note = function() {
+	if(postite_Note.el == null) {
+		postite_Note.el = postite_Note.createContainer();
+	}
 };
 postite_Note.__name__ = "postite.Note";
+postite_Note.kill = function() {
+	var noteBox = postite_Note.noteBoxes.shift();
+	if(noteBox == null) {
+		return;
+	}
+	noteBox.remove();
+	noteBox = null;
+};
+postite_Note.createContainer = function() {
+	var box = window.document.createElement("div");
+	box.classList.add("postite_notes");
+	new postite_CssHack().insertRules(".postite_notes{\n                z-index=999;\n                background-color:white;\n                border: 1px dashed black;\n                position:fixed;\n                right:10px;\n                width:100px;\n                padding:10px;\n                font-family:Sans-serif;\n            }");
+	window.document.body.appendChild(box);
+	return box;
+};
 postite_Note.prototype = {
-	noteBox: null
-	,notify: function(msg,type) {
+	notify: function(msg,type) {
 		if(type == null) {
 			type = postite_NoteType.Simple;
 		}
-		var tmp;
+		var noteBox = postite_Note.noteBoxes[0];
+		if(noteBox != null) {
+			switch(noteBox.type._hx_index) {
+			case 0:
+				switch(type._hx_index) {
+				case 0:
+					postite_Note.kill();
+					break;
+				case 1:
+					postite_Note.kill();
+					break;
+				case 2:
+					postite_Note.kill();
+					break;
+				}
+				break;
+			case 1:
+				switch(type._hx_index) {
+				case 0:
+					postite_Note.kill();
+					break;
+				case 1:
+					postite_Note.kill();
+					break;
+				case 2:
+					break;
+				}
+				break;
+			case 2:
+				switch(type._hx_index) {
+				case 0:
+					break;
+				case 1:
+					break;
+				case 2:
+					break;
+				}
+				break;
+			}
+		}
 		switch(type._hx_index) {
 		case 0:
-			tmp = new postite_NoteBox().avecTitre("ého").avecTexte(msg).appendTo(window.document.body).disapear(1000);
+			postite_Note.noteBoxes.push(new postite_NoteBox(postite_NoteType.Simple).avecTitre("simple").avecTexte(msg).appendTo(postite_Note.el).disapear(1000));
 			break;
 		case 1:
-			tmp = new postite_NoteBox().avecTitre("ého").avecTexte(msg).appendTo(window.document.body);
+			postite_Note.noteBoxes.push(new postite_NoteBox(postite_NoteType.Stay).avecTitre("stay").avecTexte(msg).appendTo(postite_Note.el));
+			break;
+		case 2:
+			postite_Note.noteBoxes.push(new postite_NoteBox(postite_NoteType.Stack).avecTitre("stack").avecTexte(msg).appendTo(postite_Note.el));
 			break;
 		}
-		this.noteBox = tmp;
 		return this;
 	}
-	,kill: function() {
-		this.noteBox.remove();
-		this.noteBox = null;
+	,stack: function() {
 	}
 	,__class__: postite_Note
 };
-var postite_NoteBox = function() {
+var postite_NoteBox = function(type) {
 	this.onIt = false;
 	this.el = this.createBox();
+	this.type = type;
 };
 postite_NoteBox.__name__ = "postite.NoteBox";
 postite_NoteBox.prototype = {
@@ -1137,12 +1200,9 @@ postite_NoteBox.prototype = {
 	,hed: null
 	,content: null
 	,onIt: null
+	,type: null
 	,appendTo: function(to) {
-		if(to.firstChild != null) {
-			to.insertBefore(this.el,to.firstChild);
-		} else {
-			to.appendChild(this.el);
-		}
+		to.appendChild(this.el);
 		this.onIt = true;
 		return this;
 	}
@@ -1164,10 +1224,10 @@ postite_NoteBox.prototype = {
 		if(time == null) {
 			time = 1000;
 		}
-		var _gthis = this;
+		haxe_Log.trace(" disaperar",{ fileName : "src/postite/Note.hx", lineNumber : 154, className : "postite.NoteBox", methodName : "disapear"});
 		if(this.onIt) {
 			haxe_Timer.delay(function() {
-				_gthis.remove();
+				postite_Note.kill();
 			},time);
 		}
 		return this;
@@ -1189,7 +1249,7 @@ postite_NoteBox.prototype = {
 		box.appendChild(this.content);
 		var css = new postite_CssHack();
 		css.insertRule("h4{\n            color:pink;\n            }\n            ");
-		css.insertRules(".postite_note{\n                z-index=999;\n                background-color:gray;\n                position:fixed;\n                right:10px;\n                width:100px;\n                padding:10px;\n                font-family:Sans-serif;\n\n            }\n            .postite_note h4{\n                margin:0;\n                background-color:black;\n                color:white;\n                font-size:3em;\n            }\n            .postite_note p{\n                color:white;\n            }");
+		css.insertRules(".postite_note{\n                background-color:gray;\n                position:relative;\n                padding:10px;\n                margin-bottom:10px;\n                font-family:Sans-serif;\n            }\n            .postite_note h4{\n                margin:0;\n                background-color:black;\n                color:white;\n                font-size:3em;\n            }\n            .postite_note p{\n                color:white;\n            }");
 		return box;
 	}
 	,__class__: postite_NoteBox
@@ -4200,6 +4260,7 @@ Object.defineProperty(js__$Boot_HaxeError.prototype,"message",{ get : function()
 	return String(this.val);
 }});
 js_Boot.__toStr = ({ }).toString;
+postite_Note.noteBoxes = [];
 utest_TestHandler.POLLING_TIME = 10;
 utest_AccessoryName.SETUP_NAME = "setup";
 utest_AccessoryName.SETUP_CLASS_NAME = "setupClass";
