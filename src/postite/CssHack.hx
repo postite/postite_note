@@ -1,6 +1,7 @@
 package postite;
 import js.html.*;
 import js.html.CSSStyleSheet;
+using Lambda;
 import js.Browser.document as doc;
 class CssHack{
 
@@ -19,14 +20,14 @@ public function new (){
     sheet.insertRule(rule);
   } catch (error:Dynamic) {
    
-      throw new js.Error('Malformated CSS: "$rule"');
+      throw new js.lib.Error('Malformated CSS: "$rule"');
 
   }
   
 }
 public function insertRules(rules: String) {
     var rules= rules.split("}\n");
-    rules.map(insertRule);
+    rules.iter(insertRule);
  
   
 }
